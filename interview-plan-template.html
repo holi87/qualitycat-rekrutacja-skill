@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{CANDIDATE_NAME}} - Interview Plan</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 30px 80px;
+    color: #1f2328;
+    line-height: 1.5;
+    background: #fafbfc;
+  }
+  h1 { border-bottom: 2px solid #d0d7de; padding-bottom: 8px; margin-top: 0; }
+  h2 { border-bottom: 1px solid #d0d7de; padding-bottom: 6px; margin-top: 32px; color: #0969da; }
+  h3 { margin-top: 24px; color: #1f2328; }
+  h4 { margin-top: 18px; margin-bottom: 6px; }
+  blockquote {
+    border-left: 4px solid #0969da;
+    padding: 8px 14px;
+    margin: 10px 0;
+    background: #ddf4ff;
+    color: #1f2328;
+    border-radius: 0 6px 6px 0;
+  }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; background: #fff; }
+  th, td { border: 1px solid #d0d7de; padding: 6px 10px; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; font-weight: 600; }
+  code {
+    background: #f6f8fa;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.92em;
+  }
+  pre {
+    background: #f6f8fa;
+    padding: 14px;
+    border-radius: 6px;
+    overflow-x: auto;
+    border: 1px solid #d0d7de;
+  }
+  pre code { background: none; padding: 0; }
+  .question-card {
+    background: #fff;
+    border: 1px solid #d0d7de;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .question-card.ok { border-left: 5px solid #1a7f37; }
+  .question-card.nok { border-left: 5px solid #cf222e; }
+  .question-card.na { border-left: 5px solid #d0d7de; }
+  .rating-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin: 12px 0 8px;
+    padding: 10px 14px;
+    background: #f6f8fa;
+    border-radius: 6px;
+    flex-wrap: wrap;
+  }
+  .rating-row label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 4px;
+    transition: background 0.15s;
+  }
+  .rating-row label:hover { background: #eaeef2; }
+  .rating-row input[type="radio"] { cursor: pointer; margin: 0; }
+  .rating-row .label-ok { color: #1a7f37; }
+  .rating-row .label-nok { color: #cf222e; }
+  .rating-row .label-na { color: #656d76; }
+  textarea {
+    width: 100%;
+    min-height: 64px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 14px;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    resize: vertical;
+    margin-top: 4px;
+    background: #fff;
+  }
+  textarea:focus { outline: none; border-color: #0969da; box-shadow: 0 0 0 3px rgba(9,105,218,0.15); }
+  .comment-label {
+    font-size: 0.85em;
+    color: #656d76;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .toolbar {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+    background: #fff;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border: 1px solid #d0d7de;
+  }
+  .toolbar button {
+    padding: 8px 14px;
+    border: 1px solid #d0d7de;
+    background: #f6f8fa;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .toolbar button:hover { background: #eaeef2; }
+  .toolbar button.primary { background: #0969da; color: #fff; border-color: #0969da; }
+  .toolbar button.primary:hover { background: #0860c5; }
+  .toolbar button.danger { background: #fff; color: #cf222e; border-color: #cf222e; }
+  .toolbar button.danger:hover { background: #ffebe9; }
+  .summary-box {
+    background: #fff8c5;
+    border: 1px solid #d4a72c;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 16px 0;
+  }
+  .summary-counts {
+    display: flex;
+    gap: 20px;
+    margin-top: 8px;
+    font-weight: 600;
+    flex-wrap: wrap;
+  }
+  .count-ok { color: #1a7f37; }
+  .count-nok { color: #cf222e; }
+  .count-na { color: #656d76; }
+  .sub-question {
+    background: #f6f8fa;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 10px 0;
+    border-left: 3px solid #8250df;
+  }
+  .time-pill {
+    display: inline-block;
+    background: #0969da;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    margin-left: 8px;
+  }
+  .must-tag {
+    display: inline-block;
+    background: #cf222e;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    margin-left: 8px;
+    font-weight: 700;
+  }
+  .bonus-tag {
+    display: inline-block;
+    background: #8250df;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    margin-left: 8px;
+    font-weight: 700;
+  }
+  @media (max-width: 760px) {
+    body { padding: 76px 16px 48px; }
+    .toolbar { left: 8px; right: 8px; top: 8px; justify-content: space-between; }
+    .toolbar button { flex: 1; padding: 8px 6px; }
+  }
+  @media print {
+    .toolbar { display: none; }
+    body { background: #fff; padding: 0; }
+    .question-card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="exportJson()">Eksport JSON</button>
+  <button class="primary" onclick="updateCounts()">Aktualizuj licznik</button>
+  <button class="danger" onclick="resetAll()">Reset</button>
+</div>
+
+<h1>{{CANDIDATE_NAME}} - Interview Plan</h1>
+<p><strong>Data:</strong> {{INTERVIEW_DATE}} &nbsp;|&nbsp; <strong>Pozycja:</strong> {{POSITION}}</p>
+<p><strong>Profil:</strong> {{PROFILE_SUMMARY}}</p>
+
+<div class="summary-box">
+  <strong>Podsumowanie ocen:</strong>
+  <div class="summary-counts">
+    <span class="count-ok">OK: <span id="count-ok">0</span></span>
+    <span class="count-nok">NOK: <span id="count-nok">0</span></span>
+    <span class="count-na">NA: <span id="count-na">0</span></span>
+  </div>
+</div>
+
+<h2>Timeboxing ({{TOTAL_TIME}})</h2>
+<table>
+  <tr><th>Blok</th><th>Czas</th></tr>
+  <tr><td>1. Intro + projekt z CV</td><td>5 min</td></tr>
+  <tr><td>2. GUI Testing</td><td>{{GUI_TIME}}</td></tr>
+  <tr><td>3. API Testing</td><td>{{API_TIME}}</td></tr>
+  <tr><td>4. ISTQB / teoria testowania</td><td>{{THEORY_TIME}}</td></tr>
+  <tr><td>5. Dodatkowe z CV</td><td>{{EXTRA_TIME}}</td></tr>
+  <tr><td>6. Livecoding</td><td>{{LIVECODING_TIME}}</td></tr>
+  <tr><td>7. Pytania kandydata + podsumowanie</td><td>5 min</td></tr>
+</table>
+
+<h2>1. Intro</h2>
+
+<div class="question-card" data-qid="intro">
+  <h4>Projekt otwierajacy <span class="time-pill">5 min</span></h4>
+  <blockquote>{{INTRO_QUESTION}}</blockquote>
+  <p><em>{{INTRO_GOAL}}</em></p>
+  <div class="rating-row" data-name="intro">
+    <strong>Ocena:</strong>
+    <label><input type="radio" name="intro" value="OK"><span class="label-ok">OK</span></label>
+    <label><input type="radio" name="intro" value="NOK"><span class="label-nok">NOK</span></label>
+    <label><input type="radio" name="intro" value="NA" checked><span class="label-na">NA</span></label>
+  </div>
+  <div class="comment-label">Komentarz</div>
+  <textarea data-comment="intro" placeholder="Rola, konkretne przyklady, skala, samodzielnosc..."></textarea>
+</div>
+
+<h2>2. GUI Testing</h2>
+
+<!-- Duplikuj blok .question-card dla kolejnych pytan. Uzywaj unikalnych data-qid, data-name i name. -->
+<div class="question-card" data-qid="gui-1">
+  <h4>{{GUI_QUESTION_1_TITLE}} <span class="must-tag">must</span></h4>
+  <blockquote>{{GUI_QUESTION_1}}</blockquote>
+  <div class="sub-question"><strong>Oczekiwane:</strong> {{GUI_QUESTION_1_EXPECTED}}</div>
+  <div class="rating-row" data-name="gui-1">
+    <strong>Ocena:</strong>
+    <label><input type="radio" name="gui-1" value="OK"><span class="label-ok">OK</span></label>
+    <label><input type="radio" name="gui-1" value="NOK"><span class="label-nok">NOK</span></label>
+    <label><input type="radio" name="gui-1" value="NA" checked><span class="label-na">NA</span></label>
+  </div>
+  <div class="comment-label">Komentarz</div>
+  <textarea data-comment="gui-1" placeholder="Notatki..."></textarea>
+</div>
+
+<div class="question-card" data-qid="gui-2">
+  <h4>{{GUI_QUESTION_2_TITLE}}</h4>
+  <blockquote>{{GUI_QUESTION_2}}</blockquote>
+  <div class="sub-question"><strong>Oczekiwane:</strong> {{GUI_QUESTION_2_EXPECTED}}</div>
+  <div class="rating-row" data-name="gui-2">
+    <strong>Ocena:</strong>
+    <label><input type="radio" name="gui-2" value="OK"><span class="label-ok">OK</span></label>
+    <label><input type="radio" name="gui-2" value="NOK"><span class="label-nok">NOK</span></label>
+    <label><input type="radio" name="gui-2" value="NA" checked><span class="label-na">NA</span></label>
+  </div>
+  <div class="comment-label">Komentarz</div>
+  <textarea data-comment="gui-2" placeholder="Notatki..."></textarea>
+</div>
+
+<h2>3. API Testing</h2>
+
+<div class="question-card" data-qid="api-1">
+  <h4>{{API_QUESTION_1_TITLE}} <span class="must-tag">must</span></h4>
+  <blockquote>{{API_QUESTION_1}}</blockquote>
+  <div class="sub-question"><strong>Oczekiwane:</strong> {{API_QUESTION_1_EXPECTED}}</div>
+  <div class="rating-row" data-name="api-1">
+    <strong>Ocena:</strong>
+    <label><input type="radio" name="api-1" value="OK"><span class="label-ok">OK</span></label>
+    <label><input type="radio" name="api-1" value="NOK"><span class="label-nok">NOK</span></label>
+    <label><input type="radio" name="api-1" value="NA" checked><span class="label-na">NA</span></label>
+  </div>
+  <div class="comment-label">Komentarz</div>
+  <textarea data-comment="api-1" placeholder="Notatki..."></textarea>
+</div>
+
+<div class="question-card" data-qid="api-2">
+  <h4>{{API_QUESTION_2_TITLE}}</h4>
+  <blockquote>{{API_QUESTION_2}}</blockquote>
+  <div class="sub-question"><strong>Oczekiwane:</strong> {{API_QUESTION_2_EXPECTED}}</div>
+  <div class="rating-row" data-name="api-2">
+    <strong>Ocena:</strong>
+    <label><input type="radio" name="api-2" value="OK"><span class="label-ok">OK</span></label>
+    <label><input type="radio" name="api-2" value="NOK"><span class="label-nok">NOK</span></label>
+    <label><input type="radio" name="api-2" value="NA" checked><span class="label-na">NA</span></label>
+  </div>
+  <div class="comment-label">Komentarz</div>
+  <textarea data-comment="api-2" placeholder="Notatki..."></textarea>
+</div>
+
+<h2>4. ISTQB / teoria testowania</h2>
+
+<div class="question-card" data-qid="theory-1">
+  <h4>{{THEORY_QUESTION_1_TITLE}} <span class="must-tag">must</span></h4>
+  <blockquote>{{THEORY_QUESTION_1}}</blockquote>
+  <div class="sub-question"><strong>Oczekiwane:</strong> {{THEORY_QUESTION_1_EXPECTED}}</div>
+  <div class="rating-row" data-name="theory-1">
+    <strong>Ocena:</strong>
+    <label><input type="radio" name="theory-1" value="OK"><span class="label-ok">OK</span></label>
+    <label><input type="radio" name="theory-1" value="NOK"><span class="label-nok">NOK</span></label>
+    <label><input type="radio" name="theory-1" value="NA" checked><span class="label-na">NA</span></label>
+  </div>
+  <div class="comment-label">Komentarz</div>
+  <textarea data-comment="theory-1" placeholder="Notatki..."></textarea>
+</div>
+
+<div class="question-card" data-qid="theory-2">
+  <h4>{{THEORY_QUESTION_2_TITLE}}</h4>
+  <blockquote>{{THEORY_QUESTION_2}}</blockquote>
+  <div class="sub-question"><strong>Oczekiwane:</strong> {{THEORY_QUESTION_2_EXPECTED}}</div>
+  <div class="rating-row" data-name="theory-2">
+    <strong>Ocena:</strong>
+    <label><input type="radio" name="theory-2" value="OK"><span class="label-ok">OK</span></label>
+    <label><input type="radio" name="theory-2" value="NOK"><span class="label-nok">NOK</span></label>
+    <label><input type="radio" name="theory-2" value="NA" checked><span class="label-na">NA</span></label>
+  </div>
+  <div class="comment-label">Komentarz</div>
+  <textarea data-comment="theory-2" placeholder="Notatki..."></textarea>
+</div>
+
+<h2>5. Dodatkowe z CV</h2>
+
+<div class="question-card" data-qid="extra-1">
+  <h4>{{EXTRA_QUESTION_1_TITLE}} <span class="bonus-tag">CV-specific</span></h4>
+  <blockquote>{{EXTRA_QUESTION_1}}</blockquote>
+  <div class="sub-question"><strong>Oczekiwane:</strong> {{EXTRA_QUESTION_1_EXPECTED}}</div>
+  <div class="rating-row" data-name="extra-1">
+    <strong>Ocena:</strong>
+    <label><input type="radio" name="extra-1" value="OK"><span class="label-ok">OK</span></label>
+    <label><input type="radio" name="extra-1" value="NOK"><span class="label-nok">NOK</span></label>
+    <label><input type="radio" name="extra-1" value="NA" checked><span class="label-na">NA</span></label>
+  </div>
+  <div class="comment-label">Komentarz</div>
+  <textarea data-comment="extra-1" placeholder="Notatki..."></textarea>
+</div>
+
+<h2>6. Livecoding</h2>
+
+<div class="question-card" data-qid="livecoding">
+  <h4>{{LIVECODING_TITLE}} <span class="time-pill">{{LIVECODING_TIME}}</span> <span class="must-tag">must</span></h4>
+  <blockquote>{{LIVECODING_CONTEXT}}</blockquote>
+
+  <h4>Polecenie</h4>
+  <pre><code>{{LIVECODING_TASK}}</code></pre>
+
+  <h4>Przykladowe rozwiazanie referencyjne</h4>
+  <pre><code>{{LIVECODING_REFERENCE_SOLUTION}}</code></pre>
+
+  <h4>Kryteria oceny</h4>
+  <table>
+    <tr><th>Aspekt</th><th>Green flag</th><th>Red flag</th></tr>
+    <tr><td>Struktura</td><td>{{LIVE_CRITERIA_STRUCTURE_GREEN}}</td><td>{{LIVE_CRITERIA_STRUCTURE_RED}}</td></tr>
+    <tr><td>Asercje / wynik</td><td>{{LIVE_CRITERIA_ASSERTIONS_GREEN}}</td><td>{{LIVE_CRITERIA_ASSERTIONS_RED}}</td></tr>
+    <tr><td>Clean code</td><td>{{LIVE_CRITERIA_CLEAN_GREEN}}</td><td>{{LIVE_CRITERIA_CLEAN_RED}}</td></tr>
+    <tr><td>Myslenie testerskie</td><td>{{LIVE_CRITERIA_TESTING_GREEN}}</td><td>{{LIVE_CRITERIA_TESTING_RED}}</td></tr>
+  </table>
+
+  <div class="rating-row" data-name="livecoding">
+    <strong>Ocena:</strong>
+    <label><input type="radio" name="livecoding" value="OK"><span class="label-ok">OK</span></label>
+    <label><input type="radio" name="livecoding" value="NOK"><span class="label-nok">NOK</span></label>
+    <label><input type="radio" name="livecoding" value="NA" checked><span class="label-na">NA</span></label>
+  </div>
+  <div class="comment-label">Komentarz do livecodingu</div>
+  <textarea data-comment="livecoding" placeholder="Podejscie, jakosc kodu, pytania doprecyzowujace, red/green flags..." style="min-height:120px;"></textarea>
+</div>
+
+<h2>7. Pytania kandydata + podsumowanie</h2>
+
+<div class="question-card" data-qid="candidate-questions">
+  <h4>Pytania od kandydata</h4>
+  <blockquote>Daj kandydatowi czas na pytania. Zwracaj uwage, czy pyta o technologie, zespol, procesy, jakosc i rozwoj.</blockquote>
+  <div class="rating-row" data-name="candidate-questions">
+    <strong>Jakosc pytan:</strong>
+    <label><input type="radio" name="candidate-questions" value="OK"><span class="label-ok">OK</span></label>
+    <label><input type="radio" name="candidate-questions" value="NOK"><span class="label-nok">NOK</span></label>
+    <label><input type="radio" name="candidate-questions" value="NA" checked><span class="label-na">NA</span></label>
+  </div>
+  <div class="comment-label">Komentarz</div>
+  <textarea data-comment="candidate-questions" placeholder="Jakie pytania zadal/a..."></textarea>
+</div>
+
+<h2>Podsumowanie koncowe</h2>
+
+<div class="question-card" data-qid="final">
+  <h4>Overall Score</h4>
+  <div class="rating-row" data-name="score">
+    <strong>Ocena 1-5:</strong>
+    <label><input type="radio" name="score" value="1"> 1</label>
+    <label><input type="radio" name="score" value="2"> 2</label>
+    <label><input type="radio" name="score" value="3"> 3</label>
+    <label><input type="radio" name="score" value="4"> 4</label>
+    <label><input type="radio" name="score" value="5"> 5</label>
+    <label><input type="radio" name="score" value="NA" checked> NA</label>
+  </div>
+
+  <div class="rating-row" data-name="recommendation" style="margin-top:10px;">
+    <strong>Rekomendacja:</strong>
+    <label><input type="radio" name="recommendation" value="STRONG"><span class="label-ok">Strongly Recommend</span></label>
+    <label><input type="radio" name="recommendation" value="YES"><span class="label-ok">Recommend</span></label>
+    <label><input type="radio" name="recommendation" value="RESERVED">Recommend with Reservations</label>
+    <label><input type="radio" name="recommendation" value="NO"><span class="label-nok">Do Not Recommend</span></label>
+    <label><input type="radio" name="recommendation" value="NA" checked><span class="label-na">NA</span></label>
+  </div>
+
+  <div class="comment-label" style="margin-top:12px;">Summary (2-3 zdania)</div>
+  <textarea data-comment="summary" placeholder="Podsumowanie rozmowy..." style="min-height:100px;"></textarea>
+
+  <div class="comment-label" style="margin-top:12px;">Rekomendowany typ projektu</div>
+  <textarea data-comment="project-fit" placeholder="Jaki typ projektu pasuje do profilu..."></textarea>
+</div>
+
+<script>
+  const STORAGE_KEY = '{{STORAGE_KEY}}';
+  const CANDIDATE_NAME = '{{CANDIDATE_NAME}}';
+  const EXPORT_PREFIX = '{{EXPORT_PREFIX}}';
+
+  function saveState() {
+    const state = { radios: {}, comments: {} };
+    document.querySelectorAll('input[type="radio"]:checked').forEach(r => {
+      state.radios[r.name] = r.value;
+    });
+    document.querySelectorAll('textarea[data-comment]').forEach(t => {
+      state.comments[t.dataset.comment] = t.value;
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function loadState() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    try {
+      const state = JSON.parse(raw);
+      Object.entries(state.radios || {}).forEach(([name, value]) => {
+        const r = document.querySelector(`input[type="radio"][name="${name}"][value="${value}"]`);
+        if (r) r.checked = true;
+      });
+      Object.entries(state.comments || {}).forEach(([name, value]) => {
+        const t = document.querySelector(`textarea[data-comment="${name}"]`);
+        if (t) t.value = value;
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function updateCardClass(radio) {
+    const card = radio.closest('.question-card');
+    if (!card) return;
+    card.classList.remove('ok', 'nok', 'na');
+    if (radio.value === 'OK') card.classList.add('ok');
+    else if (radio.value === 'NOK') card.classList.add('nok');
+    else if (radio.value === 'NA') card.classList.add('na');
+  }
+
+  function updateCounts() {
+    let ok = 0, nok = 0, na = 0;
+    const seen = new Set();
+    document.querySelectorAll('input[type="radio"]:checked').forEach(r => {
+      if (seen.has(r.name)) return;
+      seen.add(r.name);
+      if (r.value === 'OK') ok++;
+      else if (r.value === 'NOK') nok++;
+      else if (r.value === 'NA') na++;
+    });
+    document.getElementById('count-ok').textContent = ok;
+    document.getElementById('count-nok').textContent = nok;
+    document.getElementById('count-na').textContent = na;
+  }
+
+  function exportJson() {
+    const state = {
+      radios: {},
+      comments: {},
+      exportedAt: new Date().toISOString(),
+      candidate: CANDIDATE_NAME
+    };
+    document.querySelectorAll('input[type="radio"]:checked').forEach(r => {
+      state.radios[r.name] = r.value;
+    });
+    document.querySelectorAll('textarea[data-comment]').forEach(t => {
+      state.comments[t.dataset.comment] = t.value;
+    });
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${EXPORT_PREFIX}-feedback-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function resetAll() {
+    if (!confirm('Zresetować wszystkie odpowiedzi i komentarze?')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    document.querySelectorAll('input[type="radio"][value="NA"]').forEach(r => r.checked = true);
+    document.querySelectorAll('textarea').forEach(t => t.value = '');
+    document.querySelectorAll('.question-card').forEach(c => {
+      c.classList.remove('ok', 'nok');
+      c.classList.add('na');
+    });
+    updateCounts();
+  }
+
+  document.addEventListener('change', (e) => {
+    if (e.target.matches('input[type="radio"]')) {
+      updateCardClass(e.target);
+      saveState();
+      updateCounts();
+    }
+  });
+
+  document.addEventListener('input', (e) => {
+    if (e.target.matches('textarea')) saveState();
+  });
+
+  loadState();
+  document.querySelectorAll('input[type="radio"]:checked').forEach(updateCardClass);
+  updateCounts();
+</script>
+
+</body>
+</html>
